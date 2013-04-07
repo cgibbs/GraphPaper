@@ -1,4 +1,14 @@
-This is a graphing tool written in Python by Chance Gibbs. It is freely availabe under the GNU GPLv3. I really don't care what you do with/to it, but if you turn it into something nice, a little credit would be appreciated. I'm not doing a very professional job on this Readme because it's a simple little program, and I don't expect anyone to even notice it. Also, this is not a professional program, so I'm not going to dress it up like one. I wouldn't put on a suit and tie to give you a tour of my house, you know?
+This is a graphing tool written in Python by Chance Gibbs. 
+It is freely availabe under the GNU GPLv3. I really don't 
+care what you do with/to it, but if you turn it into 
+something nice, a little credit would be appreciated. I'm 
+not doing a very professional job on this Readme because 
+it's a simple little program, and I don't expect anyone to 
+even notice it. Also, this is not a professional program, 
+so I'm not going to dress it up like one. I wouldn't put 
+on a suit and tie to give you a tour of my house, you know?
+
+This module requires Pygame.
 
 ---- CONTROLS ----
 
