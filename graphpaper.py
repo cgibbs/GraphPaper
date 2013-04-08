@@ -91,10 +91,16 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F1:
                     mode = "line"
+                    sel_tri1 = [0,0]
+                    sel_tri2 = [0,0]
                 elif event.key == pygame.K_F2:
                     mode = "fill"
+                    selected = [0,0]
+                    sel_tri1 = [0,0]
+                    sel_tri2 = [0,0]
                 elif event.key == pygame.K_F3:
                     mode = "fill_tri"
+                    selected = [0,0]
                 elif event.key == pygame.K_r:
                     color = RED
                 elif event.key == pygame.K_a:
