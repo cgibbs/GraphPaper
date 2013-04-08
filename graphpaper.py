@@ -1,4 +1,6 @@
 import pygame
+import os
+import math
 
 # Define colors
 BLACK =   (  0,  0,  0)
@@ -16,9 +18,6 @@ FPS = 30
 screen_width = 800
 screen_height = 600
 screen_res = (screen_width, screen_height)
-#surface_width
-#surface_height
-#surface_res
 
 def setup_screen():
     screen = pygame.display.set_mode(screen_res)
@@ -91,16 +90,12 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F1:
                     mode = "line"
-                    sel_tri1 = [0,0]
-                    sel_tri2 = [0,0]
                 elif event.key == pygame.K_F2:
                     mode = "fill"
-                    selected = [0,0]
-                    sel_tri1 = [0,0]
-                    sel_tri2 = [0,0]
                 elif event.key == pygame.K_F3:
                     mode = "fill_tri"
-                    selected = [0,0]
+                elif event.key == pygame.K_F4:
+                    mode = "fill_cir"
                 elif event.key == pygame.K_r:
                     color = RED
                 elif event.key == pygame.K_a:
@@ -127,7 +122,7 @@ def main():
                     line_thickness = 5
                 elif event.key == pygame.K_BACKSPACE:
                     refresh_screen(screen)
-                    if mode == "line":
+                    if mode == "line" or mode == "fill_cir":
                         selected = [0,0]
                     elif mode == "fill_tri":
                         sel_tri1 = [0,0]
@@ -137,7 +132,7 @@ def main():
                 elif event.key == pygame.K_RETURN:
                     draw_all_lines(screen)
                 elif event.key == pygame.K_ESCAPE:
-                    if mode == "line":
+                    if mode == "line" or mode == "fill_cir":
                         selected = [0,0]
                     elif mode == "fill_tri":
                         sel_tri1 = [0,0]
@@ -145,7 +140,7 @@ def main():
                 
             elif event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                if mode == "line":
+                if mode == "line" or mode == "fill_cir":
                     # Rounds mouse pos to nearest node
                     pos2 = get_pos(pos)
                     if selected == [0,0]:
@@ -153,6 +148,19 @@ def main():
                         selected[1] = pos2[1]
                     elif selected == pos2:
                         pass
+                    elif mode == "fill_cir":
+                        if selected[0] > pos2[0]:
+                            a = selected[0] - pos2[0]
+                        else:
+                            a = pos2[0] - selected[0]
+                        if selected[1] > pos2[1]:
+                            b = pos2[1] - selected[0]
+                        else:
+                            b = selected[1] - pos2[1]
+                        rad = int(math.sqrt(math.pow(a,2) + math.pow(b,2)))
+                        pygame.draw.circle(screen, color,
+                                           (selected[0],selected[1]), rad)
+                        selected = [0,0]
                     else:
                         pygame.draw.line(screen, color,
                                          (selected[0],selected[1]),

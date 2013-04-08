@@ -29,6 +29,7 @@ MODE SWITCHING
 F1: Line
 F2: Fill
 F3: Fill Triangle
+F4: Fill Circle
 
 LINE WIDTH
 
