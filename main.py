@@ -83,7 +83,6 @@ def main():
     
     running = True
     while running:
-        clock.tick(FPS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -122,6 +121,11 @@ def main():
                     line_thickness = 5
                 elif event.key == pygame.K_BACKSPACE:
                     refresh_screen(screen)
+                    if mode == "line":
+                        selected = [0,0]
+                    elif mode == "fill_tri":
+                        sel_tri1 = [0,0]
+                        sel_tri2 = [0,0]
                 elif event.key == pygame.K_BACKSLASH:
                     draw_all_nodes(screen)
                 elif event.key == pygame.K_RETURN:
@@ -133,7 +137,7 @@ def main():
                         sel_tri1 = [0,0]
                         sel_tri2 = [0,0]
                 
-            elif pygame.mouse.get_pressed()[0]:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 if mode == "line":
                     # Rounds mouse pos to nearest node
