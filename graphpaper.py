@@ -13,6 +13,17 @@ BROWN =   ( 51, 25,  0)
 YELLOW=   (255,255,  0)
 GOLD  =   (204,204,  0)
 
+color_names = {				
+ ( 0, 0, 0): "BLACK",
+ (255,255,255): "WHITE",
+ (150,150,150): "GREY",
+ ( 0, 0,255): "BLUE",
+ ( 0,255, 0): "GREEN",
+ (255, 0, 0): "RED",
+ ( 51, 25, 0): "BROWN",
+ (255,255, 0): "YELLOW",
+ (204,204, 0): "GOLD"}
+
 # Define constants
 FPS = 30
 screen_width = 800
@@ -82,7 +93,13 @@ def main():
     
     running = True
     while running:
-
+        text18 = pygame.font.Font("freesansbold.ttf", 18)	
+        info_text = text18.render("Mode = {0}    Color = {1}   ".format(mode.capitalize(), color_names[color]),
+                                  True, BLACK, GREY)
+        info_rect = info_text.get_rect(bottomleft = (0, screen_height))
+        clear_text = text18.render("                                      .", True, BLACK, GREY)
+        clear_rect = clear_text.get_rect(bottomleft = (0, screen_height))
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -192,7 +209,8 @@ def main():
                     else: sel_tri1 = get_pos(pos)
                     
 
-
+        screen.blit(info_text, clear_rect)
+        screen.blit(info_text, info_rect)
         pygame.display.flip()
                 
 
