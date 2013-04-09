@@ -97,8 +97,6 @@ def main():
         info_text = text18.render("Mode = {0}    Color = {1}   ".format(mode.capitalize(), color_names[color]),
                                   True, BLACK, GREY)
         info_rect = info_text.get_rect(bottomleft = (0, screen_height))
-        clear_text = text18.render("                                      .", True, BLACK, GREY)
-        clear_rect = clear_text.get_rect(bottomleft = (0, screen_height))
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -209,7 +207,7 @@ def main():
                     else: sel_tri1 = get_pos(pos)
                     
 
-        screen.blit(info_text, clear_rect)
+        pygame.draw.rect(screen, GREY, (0, info_rect.top, screen_width, screen_height))
         screen.blit(info_text, info_rect)
         pygame.display.flip()
                 
