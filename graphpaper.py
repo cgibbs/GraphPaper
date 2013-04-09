@@ -30,6 +30,12 @@ screen_width = 800
 screen_height = 600
 screen_res = (screen_width, screen_height)
 
+# Lists for drawing
+line_list = []
+fill_list = []
+fill_tri_list = []
+fill_cir_list = []
+
 def setup_screen():
     screen = pygame.display.set_mode(screen_res)
     refresh_screen(screen)
@@ -94,7 +100,8 @@ def main():
     running = True
     while running:
         text18 = pygame.font.Font("freesansbold.ttf", 18)	
-        info_text = text18.render("Mode = {0}    Color = {1}   ".format(mode.capitalize(), color_names[color]),
+        info_text = text18.render("Mode = {0}   Color = {1}".format(mode.capitalize(),
+                                                                    color_names[color]),
                                   True, BLACK, GREY)
         info_rect = info_text.get_rect(bottomleft = (0, screen_height))
         
@@ -135,13 +142,25 @@ def main():
                     line_thickness = 3
                 elif event.key == pygame.K_3:
                     line_thickness = 5
-                elif event.key == pygame.K_BACKSPACE:
+                elif event.key == pygame.K_DELETE:
                     refresh_screen(screen)
-                    if mode == "line" or mode == "fill_cir":
-                        selected = [0,0]
+                    selected = [0,0]
+                    sel_tri1 = [0,0]
+                    sel_tri2 = [0,0]
+                    global line_list, fill_list, fill_tri_list, fill_cir_list
+                    line_list = []
+                    fill_list = []
+                    fill_tri_list = []
+                    fill_cir_list = []
+                elif event.key == pygame.K_BACKSPACE:
+                    if mode == "line":
+                        line_list.pop()
+                    elif mode == "fill":
+                        fill_list.pop()
                     elif mode == "fill_tri":
-                        sel_tri1 = [0,0]
-                        sel_tri2 = [0,0]
+                        fill_tri_list.pop()
+                    elif mode == "fill_cir":
+                        fill_cir_list.pop()
                 elif event.key == pygame.K_BACKSLASH:
                     draw_all_nodes(screen)
                 elif event.key == pygame.K_RETURN:
@@ -173,21 +192,17 @@ def main():
                         else:
                             b = selected[1] - pos2[1]
                         rad = int(math.sqrt(math.pow(a,2) + math.pow(b,2)))
-                        pygame.draw.circle(screen, color,
-                                           (selected[0],selected[1]), rad)
+                        fill_cir_list.append([color,selected,rad])
                         selected = [0,0]
                     else:
-                        pygame.draw.line(screen, color,
-                                         (selected[0],selected[1]),
-                                         (pos2[0],pos2[1]), line_thickness)
+                        line_list.append([color,selected,pos2,line_thickness])
                         selected = [0,0]
                 elif mode == "fill":
                     pos2 = [0,0]
                     pos2[0] = pos[0] - pos[0]%20
                     pos2[1] = pos[1] - pos[1]%20
                     print (pos2[0]+1), (pos2[0]+19)
-                    pygame.draw.rect(screen, color,
-                                     [pos2[0]+2,pos2[1]+2, 17, 17])
+                    fill_list.append([color, pos2])
                     draw_node(screen,pos[0]%20,pos[1]%20)
                     draw_node(screen,pos[0]%20,(pos[1]%20)+1)
                     draw_node(screen,(pos[0]%20)+1,pos[1]%20)
@@ -197,17 +212,26 @@ def main():
                     if sel_tri1 != [0,0]:
                         if sel_tri2 != [0,0]:
                             sel_tri3 = get_pos(pos)
-                            pygame.draw.polygon(screen, color,
-                                                [sel_tri1, sel_tri2, sel_tri3])
+                            fill_tri_list.append([color,[sel_tri1,sel_tri2,sel_tri3]])
                             sel_tri1 = [0,0]
                             sel_tri2 = [0,0]
                             sel_tri3 = [0,0]
                         else:
                             sel_tri2 = get_pos(pos)
                     else: sel_tri1 = get_pos(pos)
-                    
 
-        pygame.draw.rect(screen, GREY, (0, info_rect.top, screen_width, screen_height))
+        refresh_screen(screen)
+        for i in line_list:
+            pygame.draw.line(screen,i[0],i[1],i[2],i[3])
+        for j in fill_list:
+            pygame.draw.rect(screen, j[0],[j[1][0]+2,j[1][1]+2,17,17])
+        for k in fill_tri_list:
+            pygame.draw.polygon(screen,k[0],k[1])
+        for m in fill_cir_list:
+            pygame.draw.circle(screen,m[0],m[1],m[2]) 
+
+        pygame.draw.rect(screen, GREY, (0, info_rect.top, screen_width,
+                                        screen_height))
         screen.blit(info_text, info_rect)
         pygame.display.flip()
                 
