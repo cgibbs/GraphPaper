@@ -154,13 +154,17 @@ def main():
                     fill_cir_list = []
                 elif event.key == pygame.K_BACKSPACE:
                     if mode == "line":
-                        line_list.pop()
+                        if line_list != []:
+                            line_list.pop()
                     elif mode == "fill":
-                        fill_list.pop()
+                        if fill_list != []:
+                            fill_list.pop()
                     elif mode == "fill_tri":
-                        fill_tri_list.pop()
+                        if fill_tri_list != []:
+                            fill_tri_list.pop()
                     elif mode == "fill_cir":
-                        fill_cir_list.pop()
+                        if fill_cir_list != []:
+                            fill_cir_list.pop()
                 elif event.key == pygame.K_BACKSLASH:
                     draw_all_nodes(screen)
                 elif event.key == pygame.K_RETURN:
