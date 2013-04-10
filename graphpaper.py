@@ -35,6 +35,7 @@ line_list = []
 fill_list = []
 fill_tri_list = []
 fill_cir_list = []
+write_list = []
 
 def setup_screen():
     screen = pygame.display.set_mode(screen_res)
@@ -118,6 +119,10 @@ def main():
                     mode = "fill_tri"
                 elif event.key == pygame.K_F4:
                     mode = "fill_cir"
+                elif event.key == pygame.K_F5:
+                    mode = "write_b"
+                elif event.key == pygame.K_F6:
+                    mode = "write_w"
                 elif event.key == pygame.K_r:
                     color = RED
                 elif event.key == pygame.K_a:
@@ -165,6 +170,9 @@ def main():
                     elif mode == "fill_cir":
                         if fill_cir_list != []:
                             fill_cir_list.pop()
+                    elif mode == "write_w" or mode == "write_b":
+                        if write_list != []:
+                            write_list.pop()
                 elif event.key == pygame.K_BACKSLASH:
                     draw_all_nodes(screen)
                 elif event.key == pygame.K_RETURN:
@@ -201,16 +209,25 @@ def main():
                     else:
                         line_list.append([color,selected,pos2,line_thickness])
                         selected = [0,0]
-                elif mode == "fill":
+                elif mode == "fill" or mode == "write_w" or mode == "write_b":
                     pos2 = [0,0]
                     pos2[0] = pos[0] - pos[0]%20
                     pos2[1] = pos[1] - pos[1]%20
-                    print (pos2[0]+1), (pos2[0]+19)
-                    fill_list.append([color, pos2])
-                    draw_node(screen,pos[0]%20,pos[1]%20)
-                    draw_node(screen,pos[0]%20,(pos[1]%20)+1)
-                    draw_node(screen,(pos[0]%20)+1,pos[1]%20)
-                    draw_node(screen,(pos[0]%20)+1,(pos[1]%20)+1)
+                    if mode == "fill":
+                        fill_list.append([color, pos2])
+                    elif mode == "write_w" or mode == "write_b":
+                        key = pygame.event.wait()
+                        while key.type != 2:
+                            key = pygame.event.wait()
+                        if len(pygame.key.name(key.__dict__['key'])) < 2:
+                            msg = pygame.key.name(key.__dict__['key'])
+                        print msg
+                        if mode == "write_w" and msg != None:
+                            write_list.append([WHITE, pos2, msg])
+                        elif mode == "write_b" and msg != None:
+                            write_list.append([BLACK, pos2, msg])
+                        msg = None
+                        key = None                        
 
                 elif mode == "fill_tri":
                     if sel_tri1 != [0,0]:
@@ -232,7 +249,15 @@ def main():
         for k in fill_tri_list:
             pygame.draw.polygon(screen,k[0],k[1])
         for m in fill_cir_list:
-            pygame.draw.circle(screen,m[0],m[1],m[2]) 
+            pygame.draw.circle(screen,m[0],m[1],m[2])
+        for n in write_list:
+            if n[0] == BLACK:
+                write_text = text18.render("{0}".format(n[2]), True, BLACK, None)
+            elif n[0] == WHITE:
+                write_text = text18.render("{0}".format(n[2]), True, WHITE, None)
+            write_rect = write_text.get_rect(bottomleft = (n[1][0]+4,n[1][1]+20))
+            screen.blit(write_text, write_rect)
+            
 
         pygame.draw.rect(screen, GREY, (0, info_rect.top, screen_width,
                                         screen_height))
