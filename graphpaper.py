@@ -14,15 +14,15 @@ YELLOW=   (255,255,  0)
 GOLD  =   (204,204,  0)
 
 color_names = {				
- ( 0, 0, 0): "BLACK",
+ (  0,  0,  0): "BLACK",
  (255,255,255): "WHITE",
  (150,150,150): "GREY",
- ( 0, 0,255): "BLUE",
- ( 0,255, 0): "GREEN",
- (255, 0, 0): "RED",
- ( 51, 25, 0): "BROWN",
- (255,255, 0): "YELLOW",
- (204,204, 0): "GOLD"}
+ (  0,  0,255): "BLUE",
+ (  0,255,  0): "GREEN",
+ (255,  0,  0): "RED",
+ ( 51, 25,  0): "BROWN",
+ (255,255,  0): "YELLOW",
+ (204,204,  0): "GOLD"}
 
 # Define constants
 FPS = 30
@@ -88,21 +88,33 @@ def get_pos(pos):
 def main():
     pygame.init()
     screen = setup_screen()
-    clock = pygame.time.Clock()
 
     mode = "line"
     selected = [0,0]
     sel_tri1 = [0,0]
     sel_tri2 = [0,0]
-    sel_tri3 = [0,0]
     color = BLACK
     line_thickness = 3
     
     running = True
     while running:
-        text18 = pygame.font.Font("freesansbold.ttf", 18)	
-        info_text = text18.render("Mode = {0}   Color = {1}".format(mode.capitalize(),
-                                                                    color_names[color]),
+        text18 = pygame.font.Font("freesansbold.ttf", 16)
+        if mode == "line" or mode == "fill_cir":
+            info_text = text18.render("Mode = {0}    Color = {1}    Mouse Pos = {2}    Selected = {3}".format(mode.capitalize(),
+                                                        color_names[color],
+                                                        pygame.mouse.get_pos(),
+                                                        selected),    
+                                  True, BLACK, GREY)
+        elif mode == "fill_tri":
+            info_text = text18.render("Mode = {0}    Color = {1}    Mouse Pos = {2}    Selected = {3}".format(mode.capitalize(),
+                                                        color_names[color],
+                                                        pygame.mouse.get_pos(),
+                                                        [sel_tri1, sel_tri2]),    
+                                  True, BLACK, GREY)
+        else:
+            info_text = text18.render("Mode = {0}    Color = {1}    Mouse Pos = {2}".format(mode.capitalize(),
+                                                        color_names[color],
+                                                        pygame.mouse.get_pos()),    
                                   True, BLACK, GREY)
         info_rect = info_text.get_rect(bottomleft = (0, screen_height))
         
@@ -200,7 +212,7 @@ def main():
                         else:
                             a = pos2[0] - selected[0]
                         if selected[1] > pos2[1]:
-                            b = pos2[1] - selected[0]
+                            b = pos2[1] - selected[1]
                         else:
                             b = selected[1] - pos2[1]
                         rad = int(math.sqrt(math.pow(a,2) + math.pow(b,2)))
@@ -232,24 +244,23 @@ def main():
                 elif mode == "fill_tri":
                     if sel_tri1 != [0,0]:
                         if sel_tri2 != [0,0]:
-                            sel_tri3 = get_pos(pos)
-                            fill_tri_list.append([color,[sel_tri1,sel_tri2,sel_tri3]])
+                            fill_tri_list.append([color,[sel_tri1,sel_tri2,get_pos(pos)]])
                             sel_tri1 = [0,0]
                             sel_tri2 = [0,0]
-                            sel_tri3 = [0,0]
                         else:
                             sel_tri2 = get_pos(pos)
                     else: sel_tri1 = get_pos(pos)
 
         refresh_screen(screen)
-        for i in line_list:
-            pygame.draw.line(screen,i[0],i[1],i[2],i[3])
-        for j in fill_list:
-            pygame.draw.rect(screen, j[0],[j[1][0]+2,j[1][1]+2,17,17])
-        for k in fill_tri_list:
-            pygame.draw.polygon(screen,k[0],k[1])
-        for m in fill_cir_list:
-            pygame.draw.circle(screen,m[0],m[1],m[2])
+
+        for j in fill_cir_list:
+            pygame.draw.circle(screen,j[0],j[1],j[2])
+        for i in fill_tri_list:
+            pygame.draw.polygon(screen,i[0],i[1])
+        for k in fill_list:
+            pygame.draw.rect(screen, k[0],[k[1][0]+2,k[1][1]+2,17,17])
+        for m in line_list:
+            pygame.draw.line(screen,m[0],m[1],m[2],m[3])
         for n in write_list:
             if n[0] == BLACK:
                 write_text = text18.render("{0}".format(n[2]), True, BLACK, None)
