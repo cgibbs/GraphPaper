@@ -55,4 +55,14 @@ whichever one that is.
 
 ---- HOW TO DO STUFF ----
 
-It's pretty simple, really. In Line Mode, click somewhere, then click somewhere else. Fill circle works the same way, but draws a circle with a radius out to the second click. Fill Triangle Mode is the same way, but with a third click thrown in the mix, and it fills in the area inside the three points. Also, the places you can click include not just the grey points, but the middle points between them. Try it out, you'll see what I mean. In Fill Mode, you just click an area between the grey points, and it fills it in. In either Write Mode, you click a square, and type a letter, and voila!, the letter shows up.
+It's pretty simple, really. In Line Mode, click somewhere, 
+then click somewhere else. In Fill Circle Mode, you do the same,
+and a circle is drawn centered on the first spot, with a radius 
+out to the second spot. Fill Triangle Mode is the same way, 
+but with a third click thrown in the mix, and it fills in the 
+area inside the three points. Also, the places you can click 
+include not just the grey points, but the middle points between 
+them. Try it out, you'll see what I mean. In Fill Mode, you just 
+click an area between the grey points, and it fills it in. In 
+either write mode, you click a spot, then type a character, and 
+it puts that character inside the grid square. Easy peasy.
