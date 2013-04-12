@@ -14,21 +14,22 @@ YELLOW=   (255,255,  0)
 GOLD  =   (204,204,  0)
 
 color_names = {				
- ( 0, 0, 0): "BLACK",
+ (  0,  0,  0): "BLACK",
  (255,255,255): "WHITE",
  (150,150,150): "GREY",
- ( 0, 0,255): "BLUE",
- ( 0,255, 0): "GREEN",
- (255, 0, 0): "RED",
- ( 51, 25, 0): "BROWN",
- (255,255, 0): "YELLOW",
- (204,204, 0): "GOLD"}
+ (  0,  0,255): "BLUE",
+ (  0,255,  0): "GREEN",
+ (255,  0,  0): "RED",
+ ( 51, 25,  0): "BROWN",
+ (255,255,  0): "YELLOW",
+ (204,204,  0): "GOLD"}
 
 # Define constants
 FPS = 30
 screen_width = 800
 screen_height = 600
 screen_res = (screen_width, screen_height)
+tile_size = 20
 
 # Lists for drawing
 line_list = []
@@ -48,61 +49,73 @@ def refresh_screen(screen):
     draw_all_nodes(screen)
 
 def draw_node(screen, x,y):
-    pygame.draw.rect(screen, GREY, [(x*20)-2,(y*20)-2,5,5])
+    pygame.draw.rect(screen, GREY, [(x*tile_size)-2,(y*tile_size)-2,5,5])
 
 def draw_all_nodes(screen):
-    for j in range(1,screen_width / 20):
-        for k in range(1,screen_height / 20):
+    for j in range(1,screen_width / tile_size):
+        for k in range(1,screen_height / tile_size):
             draw_node(screen, j,k)
 
 def draw_all_lines(screen):
     bigger = 0
     if screen_width > screen_height:
-        bigger = screen_width / 20
+        bigger = screen_width / tile_size
     else:
-        bigger = screen_height / 20
+        bigger = screen_height / tile_size
     for i in range(0, bigger):
-        pygame.draw.line(screen, GREY, (i*20,0),(i*20,screen_height), 1)
-        pygame.draw.line(screen, GREY, (0,i*20),(screen_width,i*20), 1)
+        pygame.draw.line(screen, GREY, (i*tile_size,0),(i*tile_size,screen_height), 1)
+        pygame.draw.line(screen, GREY, (0,i*tile_size),(screen_width,i*tile_size), 1)
 
 def get_pos(pos):
     pos2 = [0,0]
-    if (pos[0]%20) < 5:
-        pos2[0] = pos[0] - pos[0]%20
-    elif (pos[0]%20) < 10:
-        pos2[0] = pos[0] - pos[0]%10 + 10
-    elif (pos[0]%20) < 15:
-        pos2[0] = pos[0] - pos[0]%10
+    if (pos[0]%tile_size) < tile_size/4:
+        pos2[0] = pos[0] - pos[0]%tile_size
+    elif (pos[0]%tile_size) < tile_size/2:
+        pos2[0] = pos[0] - pos[0]%(tile_size/2) + tile_size/2
+    elif (pos[0]%tile_size) < tile_size*3/4:
+        pos2[0] = pos[0] - pos[0]%(tile_size/2)
     else:
-        pos2[0] = pos[0] - pos[0]%20 + 20 
-    if (pos[1]%20) < 5:
-        pos2[1] = pos[1] - pos[1]%20
-    elif (pos[1]%20) < 10:
-        pos2[1] = pos[1] - pos[1]%10 + 10
-    elif (pos[1]%20) < 15:
-        pos2[1] = pos[1] - pos[1]%10
+        pos2[0] = pos[0] - pos[0]%tile_size + tile_size 
+    if (pos[1]%tile_size) < tile_size/4:
+        pos2[1] = pos[1] - pos[1]%tile_size
+    elif (pos[1]%tile_size) < tile_size/2:
+        pos2[1] = pos[1] - pos[1]%(tile_size/2) + tile_size/2
+    elif (pos[1]%tile_size) < tile_size*3/4:
+        pos2[1] = pos[1] - pos[1]%(tile_size/2)
     else:
-        pos2[1] = pos[1] - pos[1]%20 + 20
+        pos2[1] = pos[1] - pos[1]%tile_size + tile_size
     return pos2
 
 def main():
     pygame.init()
     screen = setup_screen()
-    clock = pygame.time.Clock()
 
     mode = "line"
     selected = [0,0]
     sel_tri1 = [0,0]
     sel_tri2 = [0,0]
-    sel_tri3 = [0,0]
     color = BLACK
     line_thickness = 3
     
     running = True
     while running:
-        text18 = pygame.font.Font("freesansbold.ttf", 18)	
-        info_text = text18.render("Mode = {0}   Color = {1}".format(mode.capitalize(),
-                                                                    color_names[color]),
+        text18 = pygame.font.Font("freesansbold.ttf", 16)
+        if mode == "line" or mode == "fill_cir":
+            info_text = text18.render("Mode = {0}    Color = {1}    Mouse Pos = {2}    Selected = {3}".format(mode.capitalize(),
+                                                        color_names[color],
+                                                        pygame.mouse.get_pos(),
+                                                        selected),    
+                                  True, BLACK, GREY)
+        elif mode == "fill_tri":
+            info_text = text18.render("Mode = {0}    Color = {1}    Mouse Pos = {2}    Selected = {3}".format(mode.capitalize(),
+                                                        color_names[color],
+                                                        pygame.mouse.get_pos(),
+                                                        [sel_tri1, sel_tri2]),    
+                                  True, BLACK, GREY)
+        else:
+            info_text = text18.render("Mode = {0}    Color = {1}    Mouse Pos = {2}".format(mode.capitalize(),
+                                                        color_names[color],
+                                                        pygame.mouse.get_pos()),    
                                   True, BLACK, GREY)
         info_rect = info_text.get_rect(bottomleft = (0, screen_height))
         
@@ -200,7 +213,7 @@ def main():
                         else:
                             a = pos2[0] - selected[0]
                         if selected[1] > pos2[1]:
-                            b = pos2[1] - selected[0]
+                            b = pos2[1] - selected[1]
                         else:
                             b = selected[1] - pos2[1]
                         rad = int(math.sqrt(math.pow(a,2) + math.pow(b,2)))
@@ -211,16 +224,17 @@ def main():
                         selected = [0,0]
                 elif mode == "fill" or mode == "write_w" or mode == "write_b":
                     pos2 = [0,0]
-                    pos2[0] = pos[0] - pos[0]%20
-                    pos2[1] = pos[1] - pos[1]%20
+                    pos2[0] = pos[0] - pos[0]%tile_size
+                    pos2[1] = pos[1] - pos[1]%tile_size
                     if mode == "fill":
                         fill_list.append([color, pos2])
                     elif mode == "write_w" or mode == "write_b":
                         key = pygame.event.wait()
                         while key.type != 2:
                             key = pygame.event.wait()
-                        if len(pygame.key.name(key.__dict__['key'])) < 2:
-                            msg = pygame.key.name(key.__dict__['key'])
+                        print key.dict
+                        if len(pygame.key.name(key.dict['key'])) < 2:
+                            msg = pygame.key.name(key.dict['key'])
                         print msg
                         if mode == "write_w" and msg != None:
                             write_list.append([WHITE, pos2, msg])
@@ -232,29 +246,29 @@ def main():
                 elif mode == "fill_tri":
                     if sel_tri1 != [0,0]:
                         if sel_tri2 != [0,0]:
-                            sel_tri3 = get_pos(pos)
-                            fill_tri_list.append([color,[sel_tri1,sel_tri2,sel_tri3]])
+                            fill_tri_list.append([color,[sel_tri1,sel_tri2,get_pos(pos)]])
                             sel_tri1 = [0,0]
                             sel_tri2 = [0,0]
-                            sel_tri3 = [0,0]
                         else:
                             sel_tri2 = get_pos(pos)
                     else: sel_tri1 = get_pos(pos)
 
         refresh_screen(screen)
-        for i in line_list:
-            pygame.draw.line(screen,i[0],i[1],i[2],i[3])
-        for j in fill_list:
-            pygame.draw.rect(screen, j[0],[j[1][0]+2,j[1][1]+2,17,17])
-        for k in fill_tri_list:
-            pygame.draw.polygon(screen,k[0],k[1])
-        for m in fill_cir_list:
-            pygame.draw.circle(screen,m[0],m[1],m[2])
+
+        for j in fill_cir_list:
+            pygame.draw.circle(screen,j[0],j[1],j[2])
+        for i in fill_tri_list:
+            pygame.draw.polygon(screen,i[0],i[1])
+        for k in fill_list:
+            pygame.draw.rect(screen, k[0],[k[1][0]+2,k[1][1]+2,tile_size-3,
+                                           tile_size-3])
+        for m in line_list:
+            pygame.draw.line(screen,m[0],m[1],m[2],m[3])
         for n in write_list:
             if n[0] == BLACK:
-                write_text = text18.render("{0}".format(n[2]), True, BLACK, None)
+                write_text = text18.render("{0}".format(n[2]), True, BLACK)
             elif n[0] == WHITE:
-                write_text = text18.render("{0}".format(n[2]), True, WHITE, None)
+                write_text = text18.render("{0}".format(n[2]), True, WHITE)
             write_rect = write_text.get_rect(bottomleft = (n[1][0]+4,n[1][1]+20))
             screen.blit(write_text, write_rect)
             
