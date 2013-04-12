@@ -232,10 +232,8 @@ def main():
                         key = pygame.event.wait()
                         while key.type != 2:
                             key = pygame.event.wait()
-                        print key.dict
                         if len(pygame.key.name(key.dict['key'])) < 2:
                             msg = pygame.key.name(key.dict['key'])
-                        print msg
                         if mode == "write_w" and msg != None:
                             write_list.append([WHITE, pos2, msg])
                         elif mode == "write_b" and msg != None:
