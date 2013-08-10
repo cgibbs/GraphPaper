@@ -1,3 +1,5 @@
+---- INTRO ----
+
 This is a graphing tool written in Python by Chance Gibbs. It 
 is freely available under the GNU GPLv3. I really don't care 
 what you do with/to it, but if you turn it into something nice, 
@@ -7,6 +9,12 @@ program, and I don't expect anyone to even notice it. Also,
 this is not a professional program, so I'm not going to dress 
 it up like one. I wouldn't put on a suit and tie to give you a 
 tour of my house, you know?
+
+---- INSTALLATION AND USAGE ----
+
+You can run either gpOriginal.py or gpRefactor.py, or if you 
+don't have Python, you can run gpRefactor.exe in the dist
+folder.
 
 ---- CONTROLS ----
 
