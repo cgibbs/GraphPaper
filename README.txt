@@ -28,8 +28,7 @@ F1: Line
 F2: Fill
 F3: Fill Triangle
 F4: Fill Circle
-F5: Write Black
-F6: Write White
+F5: Write
 
 LINE WIDTH
 
@@ -39,26 +38,21 @@ LINE WIDTH
 
 OTHER
 
-Escape: De-select node
+Escape: Exit current drawing mode
 Backspace: Remove last drawn object in mode
 Delete: Clear Screen
-
-* The one above the Return key. I thought that one
-was a forward slash, but Pygame disagrees. I mean, 
-I thought the trick was to draw wheels under it, 
-and the car faced the direction of the slash? Hmm. 
-Anyway, it's the slash above the Return key. 
-Whichever one that is.
 
 ---- HOW TO DO STUFF ----
 
 It's pretty simple, really. In Line Mode, click somewhere, 
 then click somewhere else. Fill Triangle Mode is the same 
 way, but with a third click thrown in the mix, and it fills 
-in the area inside the three points. Both of these are a 
-tiny bit buggy, and will occasionally draw a line as though 
-you re-selected the last place you clicked. Also, the places 
-you can click include not just the grey points, but the middle 
-points between them. Try it out, you'll see what I mean. In 
-Fill Mode, you just click an area between the grey points, and 
-it fills it in. Easy peasy.
+in the area inside the three points. Circle Mode is like 
+Line Mode, but it draws a filled circle centered at the first
+click, with a radius out to the second click. In Write Mode, 
+you click to pick a square, and type a letter, and it prints
+the letter in the square. In Fill Mode, you just click an area 
+between the grey points, and it fills it in. Easy peasy. Also, 
+the places you can click include not just the grey points, but 
+the middle points between them. Try it out, you'll see what I 
+mean.

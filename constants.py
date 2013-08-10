@@ -8,23 +8,27 @@ RED   =   (255,  0,  0)
 BROWN =   ( 51, 25,  0)
 YELLOW=   (255,255,  0)
 GOLD  =   (204,204,  0)
+CHART =   (127,255,  0)
+VOMIT =   (154,205, 50)
+HPINK =   (255,105,180)
 
-color_names = {				
- (  0,  0,  0): "BLACK",
- (255,255,255): "WHITE",
- (150,150,150): "GREY",
- (  0,  0,255): "BLUE",
- (  0,255,  0): "GREEN",
- (255,  0,  0): "RED",
- ( 51, 25,  0): "BROWN",
- (255,255,  0): "YELLOW",
- (204,204,  0): "GOLD"}
+color_names = {
+ BLACK : "BLACK",
+ WHITE : "WHITE",
+ GREY  : "GREY",
+ BLUE  : "BLUE",
+ GREEN : "GREEN",
+ RED   : "RED",
+ BROWN : "BROWN",
+ YELLOW: "YELLOW",
+ GOLD  : "GOLD",
+ CHART : "CHARTREUSE",
+ VOMIT : "VOMIT",
+ HPINK : "HOT PINK, BABY"}
 
 # Define constants
 FPS = 30
 screen_width = 800
 screen_height = 600
 screen_res = (screen_width, screen_height)
-tile_size = 10
-tiles_width = screen_width/tile_size
-tiles_height = screen_height/tile_size
+tile_size = 20

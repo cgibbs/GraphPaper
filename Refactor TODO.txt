@@ -1,0 +1,6 @@
+TO DO:
+-Formally make objects out of drawn objects, and put them in master list, 
+    to create stack layering for everything, instead of static list order
+    --Do this last, save a copy of the refactored code, and see how the speed
+	compares between the two. Find out how many objects can be created 
+	before speed suffers in a relevant way for both implementations.
