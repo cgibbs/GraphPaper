@@ -96,32 +96,18 @@ def draw_shapes(screen):
         
 def draw_letters(screen, tf):
     for i in write_list:
-        write_text = tf.render("{0}".format(n[2]), True, n[0])
-        write_rect = write_text.get_rect(bottomleft = (n[1][0]+4,n[1][1]+20))
+        write_text = tf.render("{0}".format(i[2]), True, i[0])
+        write_rect = write_text.get_rect(bottomleft = (i[1][0]+4,i[1][1]+20))
         screen.blit(write_text, write_rect)
 
 # -----Get positions in various ways -----
 
 def get_pos():
-    pos = pygame.mouse.get_pos()
-    pos2 = [0,0]
-    if (pos[0]%tile_size) < tile_size/4:
-        pos2[0] = pos[0] - pos[0]%tile_size
-    elif (pos[0]%tile_size) < tile_size/2:
-        pos2[0] = pos[0] - pos[0]%(tile_size/2) + tile_size/2
-    elif (pos[0]%tile_size) < tile_size*3/4:
-        pos2[0] = pos[0] - pos[0]%(tile_size/2)
-    else:
-        pos2[0] = pos[0] - pos[0]%tile_size + tile_size 
-    if (pos[1]%tile_size) < tile_size/4:
-        pos2[1] = pos[1] - pos[1]%tile_size
-    elif (pos[1]%tile_size) < tile_size/2:
-        pos2[1] = pos[1] - pos[1]%(tile_size/2) + tile_size/2
-    elif (pos[1]%tile_size) < tile_size*3/4:
-        pos2[1] = pos[1] - pos[1]%(tile_size/2)
-    else:
-        pos2[1] = pos[1] - pos[1]%tile_size + tile_size
-    return pos2
+    x, y = pygame.mouse.get_pos()
+    x = round_to_nearest(x, tile_size/2)
+    y = round_to_nearest(y, tile_size/2)
+
+    return (x,y)
 
 def get_fill_pos(pos):
     pos2 = [0,0]
@@ -138,6 +124,9 @@ def get_wait_pos():
             if e.key == pygame.K_ESCAPE:
                 print "break"
                 return None
+
+def round_to_nearest(number, to):
+    return round(number / to) * to
 
 # -----Draw list appends-----
 
