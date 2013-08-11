@@ -182,12 +182,11 @@ def write():
 # -----The Annihilator-----
 
 def clear_lists():
-    global line_list, fill_list, triangle_list, circle_list, write_list         
-    line_list = []
-    fill_list = []
-    triangle_list = []
-    circle_list = []
-    write_list = []
+    line_list.clear()
+    fill_list.clear()
+    triangle_list.clear()
+    circle_list.clear()
+    write_list.clear()
 
 #
 #
