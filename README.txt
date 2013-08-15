@@ -12,9 +12,10 @@ tour of my house, you know?
 
 ---- INSTALLATION AND USAGE ----
 
-You can run either gpOriginal.py or gpRefactor.py, or if you 
-don't have Python, you can run gpRefactor.exe in the dist
-folder.
+You can run either gpOriginal.py or gpRefactor.py. But I recommend 
+gpRefactor.py.
+
+Requires PyGame.
 
 ---- CONTROLS ----
 

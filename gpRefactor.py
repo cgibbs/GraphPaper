@@ -10,7 +10,42 @@ fill_list = []
 triangle_list = []
 circle_list = []
 write_list = []
-temp = []
+
+# -----Key dictionaries-----
+
+key_to_mode = {
+    pygame.K_F1: "line",
+    pygame.K_F2: "fill",
+    pygame.K_F3: "triangle",
+    pygame.K_F4: "circle",
+    pygame.K_F5: "write",
+}
+
+key_to_color = {
+    pygame.K_r: RED,
+    pygame.K_a: BLACK,
+    pygame.K_b: BLUE,
+    pygame.K_e: GREY,
+    pygame.K_g: GREEN,
+    pygame.K_w: WHITE,
+    pygame.K_d: GOLD,
+    pygame.K_y: YELLOW,
+    pygame.K_o: BROWN
+}
+
+key_to_line_thickness = {
+    pygame.K_1: 1,
+    pygame.K_2: 3,
+    pygame.K_3: 5
+}
+
+mode_to_list = {
+    "line": line_list,
+    "fill": fill_list,
+    "triangle": triangle_list,
+    "circle": circle_list,
+    "write": write_list
+}
 
 # -----Some globally-relevant stuff-----
 
@@ -90,9 +125,6 @@ def draw_shapes(screen):
                                        tile_size-3])
     for m in line_list:
         pygame.draw.line(screen,m[0],m[1],m[2],m[3])
-    for n in temp:
-        pygame.draw.rect(screen, GREY, [(n[0]*tile_size)-2,(n[1]*tile_size)-2,
-                                        5,5])
         
 def draw_letters(screen, tf):
     for i in write_list:
@@ -104,12 +136,12 @@ def draw_letters(screen, tf):
 
 def get_pos():
     x, y = pygame.mouse.get_pos()
-    x = round_to_nearest(x, tile_size/2)
-    y = round_to_nearest(y, tile_size/2)
-
+    x = int(round_to_nearest(x, tile_size/2.0))
+    y = int(round_to_nearest(y, tile_size/2.0))
     return (x,y)
 
-def get_fill_pos(pos):
+def get_fill_pos():
+    pos = get_pos()
     pos2 = [0,0]
     pos2[0] = pos[0] - pos[0]%tile_size
     pos2[1] = pos[1] - pos[1]%tile_size
@@ -118,15 +150,16 @@ def get_fill_pos(pos):
 def get_wait_pos():
     while True:
         e = pygame.event.wait()
-        if e.type == pygame.MOUSEBUTTONUP:
+        if e.type == pygame.QUIT:
+            return None
+        elif e.type == pygame.MOUSEBUTTONUP:
             return get_pos()
         elif e.type == pygame.KEYDOWN:
             if e.key == pygame.K_ESCAPE:
-                print "break"
                 return None
 
 def round_to_nearest(number, to):
-    return round(number / to) * to
+    return round(number / to, 0) * to
 
 # -----Draw list appends-----
 
@@ -148,7 +181,7 @@ def circle(screen,tf):
     circle_list.append([color,p1,rad])
 
 def fill():
-    fill_list.append([color,get_fill_pos(get_pos())])
+    fill_list.append([color,get_fill_pos()])
 
 def line(screen,tf):
     p1 = get_pos()
@@ -171,7 +204,7 @@ def triangle(screen,tf):
     triangle_list.append([color,[p1,p2,p3]])
 
 def write():
-    p1 = get_fill_pos(get_pos())
+    p1 = get_fill_pos()
     e = pygame.event.wait()
     while e.type != pygame.KEYDOWN:
         e = pygame.event.wait()
@@ -182,11 +215,12 @@ def write():
 # -----The Annihilator-----
 
 def clear_lists():
-    line_list.clear()
-    fill_list.clear()
-    triangle_list.clear()
-    circle_list.clear()
-    write_list.clear()
+    global line_list, fill_list, triangle_list, circle_list, write_list
+    line_list = []
+    fill_list = []
+    triangle_list = []
+    circle_list = []
+    write_list = []
 
 #
 #
@@ -195,97 +229,61 @@ def clear_lists():
 #
 
 def main():
+    global color, line_thickness, mode
+
     pygame.init()
     screen = create_screen()
+    pygame.display.flip()
 
-    global color, line_thickness, mode, temp
     text16 = pygame.font.Font("freesansbold.ttf", 16)
     
     running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+    while running:        
+        event = pygame.event.wait()
 
-            if event.type == pygame.KEYDOWN:
-                # mode changes (insert music theory joke here)
-                if event.key == pygame.K_F1:
-                    mode = "line"
-                elif event.key == pygame.K_F2:
-                    mode = "fill"
-                elif event.key == pygame.K_F3:
-                    mode = "triangle"
-                elif event.key == pygame.K_F4:
-                    mode = "circle"
-                elif event.key == pygame.K_F5:
-                    mode = "write"
+        if event.type == pygame.QUIT:
+            running = False
 
-                # color changes
-                elif event.key == pygame.K_r:
-                    color = RED
-                elif event.key == pygame.K_a:
-                    color = BLACK
-                elif event.key == pygame.K_b:
-                    color = BLUE
-                elif event.key == pygame.K_e:
-                    color = GREY
-                elif event.key == pygame.K_g:
-                    color = GREEN
-                elif event.key == pygame.K_w:
-                    color = WHITE
-                elif event.key == pygame.K_d:
-                    color = GOLD
-                elif event.key == pygame.K_y:
-                    color = YELLOW
-                elif event.key == pygame.K_o:
-                    color = BROWN
-                elif event.key == pygame.K_1:
-                    line_thickness = 1
-                elif event.key == pygame.K_2:
-                    line_thickness = 3
-                elif event.key == pygame.K_3:
-                    line_thickness = 5
+        elif event.type == pygame.KEYDOWN:
+            if event.key in key_to_mode:
+                mode = key_to_mode[event.key]
 
-                # deletions
-                elif event.key == pygame.K_DELETE:
-                    refresh_screen(screen)
-                    clear_lists()
-                elif event.key == pygame.K_BACKSPACE:
-                    if mode == "line":
-                        if line_list != []:
-                            line_list.pop()
-                    elif mode == "fill":
-                        if fill_list != []:
-                            fill_list.pop()
-                    elif mode == "triangle":
-                        if triangle_list != []:
-                            triangle_list.pop()
-                    elif mode == "circle":
-                        if circle_list != []:
-                            circle_list.pop()
-                    elif mode == "write":
-                        if write_list != []:
-                            write_list.pop()
+            elif event.key in key_to_color:
+                color = key_to_color[event.key]
+
+            elif event.key in key_to_line_thickness:
+                line_thickness = key_to_line_thickness[event.key]
+
+            elif event.key in key_to_color:
+                color = key_to_color[event.key]
+
+            elif event.key == pygame.K_DELETE:
+                clear_lists()
                 
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if mode == "circle":
-                    circle(screen,text16)
-                elif mode == "fill":
-                    fill()
-                elif mode == "line":
-                    line(screen,text16)
-                elif mode == "triangle":
-                    triangle(screen,text16)
-                elif mode == "write":
-                    write()
-                    
+            elif event.key == pygame.K_BACKSPACE:
+                if mode_to_list[mode]:
+                    mode_to_list[mode].pop()
+            
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if mode == "circle":
+                circle(screen,text16)
+            elif mode == "fill":
+                fill()
+            elif mode == "line":
+                line(screen,text16)
+            elif mode == "triangle":
+                triangle(screen,text16)
+            elif mode == "write":
+                write()
+
         refresh_screen(screen)
         draw_shapes(screen)
         draw_letters(screen,text16)
         draw_bot_text(screen,text16)
-        temp = []
         pygame.display.flip()
-                
+
+
+        
 
 # -----Run-----
 
