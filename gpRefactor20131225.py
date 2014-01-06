@@ -16,43 +16,6 @@ pygame.init()
 text16 = pygame.font.Font("freesansbold.ttf", 16)
 sym_font = pygame.font.Font("dPoly 4EDings.ttf", 24)
 
-# -----Classes -----
-
-class Line:
-    def __init__(self, color, start, end, thickness):
-        self.color = color
-        self.start = start
-        self.end = end
-        self.thickness = thickness
-
-class Fill:
-    def __init__(self, color, pos):
-        self.color = color
-        self.pos = pos
-
-class Triangle:
-    def __init__(self, color, start, mid, end):
-        self.color = color
-        self.start = start
-        self.mid = mid
-        self.end = end
-
-class Circle:
-    def __init__(self, color, center, radius):
-        self.color = color
-        self.center = center
-        self.radius = radius
-
-class Char:
-    def __init__(self, color, pos, char):
-        self.color = color
-        self.pos = pos
-        self.char = char
-
-class Symbol(Char):
-    def __init__(self, color, pos, char):
-        Char.__init__(self, color, pos, char)
-
 # -----Boring stuff (screen methods)-----
 
 def create_screen():
@@ -113,27 +76,27 @@ def draw_selected_text(sel):
                                     SCREEN_HEIGHT))
     screen.blit(info_text, info_rect)
 
-def draw_shapes():
+def draw_shapes(screen):
     global line_list, fill_list, triangle_list, circle_list
     for j in circle_list:
-        pygame.draw.circle(screen,j.color,j.center,j.radius)
+        pygame.draw.circle(screen,j[0],j[1],j[2])
     for i in triangle_list:
-        pygame.draw.polygon(screen,i.color, [i.start, i.mid, i.end])
+        pygame.draw.polygon(screen,i[0],i[1])
     for k in fill_list:
-        pygame.draw.rect(screen, color,[k.pos[0]+2,k.pos[1]+2,TILE_SIZE-3,
+        pygame.draw.rect(screen, k[0],[k[1][0]+2,k[1][1]+2,TILE_SIZE-3,
                                        TILE_SIZE-3])
     for m in line_list:
-        pygame.draw.line(screen,m.color,m.start,m.end,m.thickness)
+        pygame.draw.line(screen,m[0],m[1],m[2],m[3])
         
 def draw_letters():
     global write_list, symbol_list
     for i in write_list:
-        write_text = text16.render("{0}".format(i.char), True, i.color)
-        write_rect = write_text.get_rect(bottomleft = (i.pos[0]+4,i.pos[1]+20))
+        write_text = text16.render("{0}".format(i[2]), True, i[0])
+        write_rect = write_text.get_rect(bottomleft = (i[1][0]+4,i[1][1]+20))
         screen.blit(write_text, write_rect)
     for i in symbol_list:
-        write_text = sym_font.render("{0}".format(i.char), True, i.color)
-        write_rect = write_text.get_rect(bottomleft = (i.pos[0],i.pos[1]+20))
+        write_text = sym_font.render("{0}".format(i[2]), True, i[0])
+        write_rect = write_text.get_rect(bottomleft = (i[1][0],i[1][1]+20))
         screen.blit(write_text, write_rect)
 
 def draw_symbol_menu():
@@ -172,8 +135,7 @@ def draw_symbol_menu():
             y = 5
             for s in "abcdefhijklmopqrstuxyz345":
                 if j == x and k == y:
-                    sym = Symbol(color, (mx, my), s)
-                    symbol_list.append(sym)
+                    symbol_list.append((color, (mx, my), s))
                     looping = False
                     break
                 else:
@@ -228,12 +190,10 @@ def circle():
     else:
         b = p1[1] - p2[1]
     rad = int(math.sqrt(math.pow(a,2) + math.pow(b,2)))
-    c = Circle(color, p1, rad)
-    circle_list.append(c)
+    circle_list.append([color,p1,rad])
 
 def fill():
-    f = Fill(color, get_fill_pos())
-    fill_list.append(f)
+    fill_list.append([color,get_fill_pos()])
 
 def line():
     p1 = get_pos()
@@ -241,8 +201,7 @@ def line():
     p2 = get_wait_pos()
     if not p2:
         return
-    ln = Line(color, p1, p2, line_thickness)
-    line_list.append(ln)
+    line_list.append([color,p1,p2,line_thickness])
 
 def triangle():
     p1 = get_pos()
@@ -254,8 +213,7 @@ def triangle():
     p3 = get_wait_pos()
     if not p3:
         return
-    t = Triangle(color, p1, p2, p3)
-    triangle_list.append(t)
+    triangle_list.append([color,[p1,p2,p3]])
 
 def write():
     p1 = get_fill_pos()
@@ -264,8 +222,7 @@ def write():
         e = pygame.event.wait()
     if len(pygame.key.name(e.dict['key'])) < 2:
         msg = pygame.key.name(e.dict['key'])
-        c = Char(color, p1, msg)
-        write_list.append(c)
+        write_list.append([color, p1, msg])
 
 # -----The Annihilator-----
 
@@ -443,7 +400,7 @@ def main():
             mode_to_method[mode]()
 
         refresh_screen(screen)
-        draw_shapes()
+        draw_shapes(screen)
         draw_letters()
         draw_bot_text()
         pygame.display.flip()

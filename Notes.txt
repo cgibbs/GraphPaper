@@ -1,0 +1,4 @@
+-store tuples of connections and fills in a master line list?
+-use blit() to draw onto the screen for buttons and stuff.
+-use sockets to make a server that runs graphpaper.py, and sends out 
+   the object lists to clients that draw the objects.

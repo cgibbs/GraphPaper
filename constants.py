@@ -28,7 +28,7 @@ color_names = {
 
 # Define constants
 FPS = 30
-screen_width = 800
-screen_height = 600
-screen_res = (screen_width, screen_height)
-tile_size = 20
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+SCREEN_RES = (SCREEN_WIDTH, SCREEN_HEIGHT)
+TILE_SIZE = 20

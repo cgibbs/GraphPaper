@@ -123,8 +123,7 @@ def draw_shapes():
         pygame.draw.rect(screen, color,[k.pos[0]+2,k.pos[1]+2,TILE_SIZE-3,
                                        TILE_SIZE-3])
     for m in line_list:
-        pygame.draw.line(screen,m.color,m.start,m.end,m.thickness)
-        
+        pass
 def draw_letters():
     global write_list, symbol_list
     for i in write_list:
@@ -135,6 +134,33 @@ def draw_letters():
         write_text = sym_font.render("{0}".format(i.char), True, i.color)
         write_rect = write_text.get_rect(bottomleft = (i.pos[0],i.pos[1]+20))
         screen.blit(write_text, write_rect)
+
+def draw_char(i):
+    write_text = text16.render("{0}".format(i.char), True, i.color)
+    write_rect = write_text.get_rect(bottomleft = (i.pos[0]+4,i.pos[1]+20))
+    screen.blit(write_text, write_rect)
+
+def draw_symbol(i):
+    write_text = sym_font.render("{0}".format(i.char), True, i.color)
+    write_rect = write_text.get_rect(bottomleft = (i.pos[0],i.pos[1]+20))
+    screen.blit(write_text, write_rect)
+
+def draw_objects():
+    global objects
+    for i in objects:
+        if isinstance(i, Line):
+            pygame.draw.line(screen,i.color,i.start,i.end,i.thickness)
+        elif isinstance(i, Fill):
+            pygame.draw.rect(screen, i.color,[i.pos[0]+2,i.pos[1]+2,TILE_SIZE-3,
+                                       TILE_SIZE-3])
+        elif isinstance(i, Triangle):
+            pygame.draw.polygon(screen,i.color, [i.start, i.mid, i.end])
+        elif isinstance(i, Circle):
+            pygame.draw.circle(screen,j.color,j.center,j.radius)
+        elif isinstance(i, Symbol):
+            draw_symbol(i)
+        elif isinstance(i, Char):
+            draw_char(i)
 
 def draw_symbol_menu():
     (mx, my) = get_fill_pos()
@@ -173,7 +199,8 @@ def draw_symbol_menu():
             for s in "abcdefhijklmopqrstuxyz345":
                 if j == x and k == y:
                     sym = Symbol(color, (mx, my), s)
-                    symbol_list.append(sym)
+                    #symbol_list.append(sym)
+                    objects.append(sym)
                     looping = False
                     break
                 else:
@@ -229,11 +256,13 @@ def circle():
         b = p1[1] - p2[1]
     rad = int(math.sqrt(math.pow(a,2) + math.pow(b,2)))
     c = Circle(color, p1, rad)
-    circle_list.append(c)
+    #circle_list.append(c)
+    objects.append(c)
 
 def fill():
     f = Fill(color, get_fill_pos())
-    fill_list.append(f)
+    #fill_list.append(f)
+    objects.append(f)
 
 def line():
     p1 = get_pos()
@@ -242,7 +271,8 @@ def line():
     if not p2:
         return
     ln = Line(color, p1, p2, line_thickness)
-    line_list.append(ln)
+    #line_list.append(ln)
+    objects.append(ln)
 
 def triangle():
     p1 = get_pos()
@@ -255,7 +285,8 @@ def triangle():
     if not p3:
         return
     t = Triangle(color, p1, p2, p3)
-    triangle_list.append(t)
+    #triangle_list.append(t)
+    objects.append(t)
 
 def write():
     p1 = get_fill_pos()
@@ -265,17 +296,19 @@ def write():
     if len(pygame.key.name(e.dict['key'])) < 2:
         msg = pygame.key.name(e.dict['key'])
         c = Char(color, p1, msg)
-        write_list.append(c)
+        #write_list.append(c)
+        objects.append(c)
 
 # -----The Annihilator-----
 
 def clear_lists():
-    global line_list, fill_list, triangle_list, circle_list, write_list
+    global objects, line_list, fill_list, triangle_list, circle_list, write_list
     line_list = []
     fill_list = []
     triangle_list = []
     circle_list = []
     write_list = []
+    objects = []
 
 # -----Lists for drawing-----
 
@@ -285,6 +318,7 @@ triangle_list = []
 circle_list = []
 write_list = []
 symbol_list = []
+objects = []
 
 # -----Key dictionaries-----
 
@@ -353,17 +387,19 @@ def save():
         textbox.draw(screen)
         pygame.display.flip()
     file = shelve.open(val, 'n')
-    file['line_list'] = line_list
-    file['fill_list'] = fill_list
-    file['triangle_list'] = triangle_list
-    file['circle_list'] = circle_list
-    file['write_list'] = write_list
-    file['symbol_list'] = symbol_list
+    #file['line_list'] = line_list
+    #file['fill_list'] = fill_list
+    #file['triangle_list'] = triangle_list
+    #file['circle_list'] = circle_list
+    #file['write_list'] = write_list
+    #file['symbol_list'] = symbol_list
+    file['objects'] = objects
     file.close()
 
 def load():
-    global line_list, fill_list, triangle_list, circle_list, write_list
-    global symbol_list
+    #global line_list, fill_list, triangle_list, circle_list, write_list
+    #global symbol_list
+    global objects
     
     textbox = eztext.Input(maxlength=45, color=(255,0,0), prompt="Load name: ")
     looping = True
@@ -383,12 +419,13 @@ def load():
         pygame.display.flip()
     #clear_lists()
     file = shelve.open(val, 'r')
-    line_list = file['line_list']
-    fill_list = file['fill_list']
-    triangle_list = file['triangle_list']
-    circle_list = file['circle_list']
-    write_list = file['write_list']
-    symbol_list = file['symbol_list']
+    #line_list = file['line_list']
+    #fill_list = file['fill_list']
+    #triangle_list = file['triangle_list']
+    #circle_list = file['circle_list']
+    #write_list = file['write_list']
+    #symbol_list = file['symbol_list']
+    objects = file['objects']
     file.close()
 
 #
@@ -430,8 +467,9 @@ def main():
                 
             elif event.key == pygame.K_BACKSPACE:
                 # not sure why using globals normally doesn't work...
-                if globals()[mode_to_list[mode]]: 
-                   globals()[mode_to_list[mode]].pop()
+                #if globals()[mode_to_list[mode]]: 
+                #   globals()[mode_to_list[mode]].pop()
+                objects.pop()
 
             elif event.key == pygame.K_HOME:
                 save()
@@ -443,8 +481,9 @@ def main():
             mode_to_method[mode]()
 
         refresh_screen(screen)
-        draw_shapes()
-        draw_letters()
+        #draw_shapes()
+        #draw_letters()
+        draw_objects()
         draw_bot_text()
         pygame.display.flip()
 

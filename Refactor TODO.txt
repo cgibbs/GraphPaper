@@ -1,6 +1,10 @@
 TO DO:
--Formally make objects out of drawn objects, and put them in master list, 
-    to create stack layering for everything, instead of static list order
+-Layers, so that you can show bits of the map at a time. Use Shift + numbers,
+and make everything within layers, set to be drawn when enabled. Might be better
+to do after OOP Mode Enabled.
+-OOP MODE ENABLED: Formally make objects out of drawn objects, 
+and put them in master list, to create stack layering for 
+everything, instead of static list order.
     --Do this last, save a copy of the refactored code, and see how the speed
 	compares between the two. Find out how many objects can be created 
 	before speed suffers in a relevant way for both implementations.

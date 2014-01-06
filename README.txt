@@ -10,12 +10,22 @@ this is not a professional program, so I'm not going to dress
 it up like one. I wouldn't put on a suit and tie to give you a 
 tour of my house, you know?
 
----- INSTALLATION AND USAGE ----
+---- USAGE ----
 
-You can run either gpOriginal.py or gpRefactor.py. But I recommend 
-gpRefactor.py.
+NOTE: gpOriginal is only there to remind me how terrible my 
+original program was. I don't really recommend using it at all,
+because the other two versions are much better.
 
-Requires PyGame.
+You can run either gpOriginal.py, gpRefactor.py, or gpObjOr.py.
+gpOriginal and gpRefactor operate more or less the same, though
+gpRefactor has more features, and is more updated in general.
+gpObjOr is the newest version, and it behaves differently.
+Basically, gpObjOr uses one unified object list, so that the
+most recent additions are drawn on top, rather than 
+letters>lines>fill>etc. Both have their advantages and 
+disadvantages, so I thought I'd leave them both in, so that the
+two people in the world that ever use this don't get into a 
+heated argument.
 
 ---- CONTROLS ----
 
@@ -38,6 +48,7 @@ F2: Fill
 F3: Fill Triangle
 F4: Fill Circle
 F5: Write
+F6: Symbol
 
 LINE WIDTH
 
@@ -48,8 +59,10 @@ LINE WIDTH
 OTHER
 
 Escape: Exit current drawing mode
-Backspace: Remove last drawn object in mode
+Backspace: Remove last drawn object (in mode, if using gpRefactor)
 Delete: Clear Screen
+Home: Save
+End: Load
 
 ---- HOW TO DO STUFF ----
 
@@ -58,10 +71,10 @@ then click somewhere else. Fill Triangle Mode is the same
 way, but with a third click thrown in the mix, and it fills 
 in the area inside the three points. Circle Mode is like 
 Line Mode, but it draws a filled circle centered at the first
-click, with a radius out to the second click. In Write Mode, 
-you click to pick a square, and type a letter, and it prints
-the letter in the square. In Fill Mode, you just click an area 
-between the grey points, and it fills it in. Easy peasy. Also, 
-the places you can click include not just the grey points, but 
-the middle points between them. Try it out, you'll see what I 
-mean.
+click, with a radius out to the second click. In Write Mode and
+symbol mode, you click to pick a square, and type a letter, and 
+it prints the letter in the square. In Fill Mode, you just click 
+an area between the grey points, and it fills it in. Easy peasy. 
+Also, the places you can click include not just the grey points, 
+but the halfway points between them. Try it out, you'll see what 
+I mean.
